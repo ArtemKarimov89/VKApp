@@ -67,6 +67,8 @@ class YD:
         response = requests.put(f'{self.BASE_URL}/v1/disk/resources', params=params, headers=self.headers)
 
     def photos_backup(self, photos_list, folder_name):
+        if folder_name == "":
+            folder_name = 'profile_photos'
         self.create_dir(folder_name)
 
         for photo in photos_list:
