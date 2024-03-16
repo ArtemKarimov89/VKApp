@@ -66,12 +66,11 @@ class YD:
         params = {'path': f'{dir_name}'}
         response = requests.put(f'{self.BASE_URL}/v1/disk/resources', params=params, headers=self.headers)
 
-    def photos_backup(self, photos_list):
-        dir_name = '123'
-        self.create_dir(dir_name)
+    def photos_backup(self, photos_list, folder_name):
+        self.create_dir(folder_name)
 
         for photo in photos_list:
-            params = {'path': f'{dir_name}/{photo['file_name']}',
+            params = {'path': f'{folder_name}/{photo['file_name']}',
                       'overwrite': True,
                       'url': photo.pop('url')}
             response = requests.post(f'{self.BASE_URL}/v1/disk/resources/upload',
@@ -81,9 +80,14 @@ class YD:
 
 
 if __name__ == '__main__':
-    access_token = ("07938e6207938e6207938e62560484ee5b0079307938e62624b66156e4ac4263db5abf6")  # сервисный ключ
-    user_id =   # идентификатор пользователя VK
-    y_token = '' # токен с полигона Yandex
+    print('Пожалуйста, введите сервисный ключ')
+    access_token = input()  # сервисный ключ
+    print('Пожалуйста, введите токен с полигона Yandex')
+    y_token = input()  # токен с полигона Yandex
+    print('Пожалуйста, введите идентификатор пользователя VK')
+    user_id = int(input())  # идентификатор пользователя VK
+    print('Пожалуйста, введите имя папки, куда будет сохранены фотографии профиля')
+    folder_name = input()
 
     vk = VK(access_token, user_id)
     all_photos = vk.get_photos(user_id, 'profile')
@@ -92,4 +96,5 @@ if __name__ == '__main__':
     photos_list = get_photos(all_photos, max_photos)
 
     y_disk = YD(y_token)
-    y_disk.photos_backup(photos_list)
+    y_disk.photos_backup(photos_list, folder_name)
+    print('Логи находятся в файле "log.json"')
